@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="SIAKAD - Master Data Mahasiswa" />
+    <meta name="author" content="" />
+
+    <title>SIAKAD - Master Data Mahasiswa</title>
+
+    <!-- Custom fonts for this template -->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
+
+    <!-- Custom styles for this template -->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet" />
+
+    <!-- Custom styles for this page -->
+    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
+
+    <style>
+        /* Header Tabel Ramping & Gelap Sesuai Gambar */
+        .table thead.thead-siakad th {
+            background-color: #3e454d !important;
+            color: #ffffff !important;
+            border-color: #4b545c !important;
+            vertical-align: middle;
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding-top: 9px !important;
+            padding-bottom: 9px !important;
+            white-space: nowrap !important;
+        }
+
+        .table td {
+            vertical-align: middle !important;
+            font-size: 0.88rem;
+            color: #4a5568;
+        }
+
+        /* Geser Posisi Modal Sedikit ke Atas */
+        .modal-dialog {
+            margin-top: 35px !important;
+        }
+
+        /* Badge Kotak NIM */
+        .badge-nim {
+            background-color: #f8fafc;
+            color: #334155;
+            border: 1px solid #cbd5e1;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.82rem;
+            display: inline-block;
+        }
+
+        /* Badge Status Bulat (Pill) */
+        .badge-status {
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-block;
+            color: #ffffff;
+        }
+
+        .badge-aktif {
+            background-color: #10b981;
+        }
+
+        .badge-cuti {
+            background-color: #f59e0b;
+        }
+
+        /* Tombol Aksi Bersebelahan (Horizontal) */
+        .action-container {
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            white-space: nowrap !important;
+        }
+
+        .btn-action-edit,
+        .btn-action-delete {
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: 4px;
+            color: #ffffff !important;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-action-edit {
+            background-color: #17a2b8;
+        }
+
+        .btn-action-edit:hover {
+            background-color: #138496;
+        }
+
+        .btn-action-delete {
+            background-color: #e02d1b;
+        }
+
+        .btn-action-delete:hover {
+            background-color: #c82333;
+        }
+
+        /* Header Modal */
+        .modal-header-siakad {
+            background-color: #4e73df;
+            color: #ffffff;
+            border-top-left-radius: calc(0.3rem - 1px);
+            border-top-right-radius: calc(0.3rem - 1px);
+        }
+    </style>
+</head>
+
+<body id="page-top">
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+                <div class="sidebar-brand-icon rotate-n-15">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">SIAKAD <sup>APP</sup></div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0" />
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item">
+                <a class="nav-link" href="index.html">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider" />
+
+            <!-- Heading -->
+            <div class="sidebar-heading">MASTER DATA</div>
+
+            <!-- Nav Item - Master Data Prodi -->
+            <li class="nav-item">
+                <a class="nav-link" href="tables.html">
+                    <i class="fas fa-university fa-table"></i>
+                    <span>Master Data Prodi</span></a>
+            </li>
+
+            <!-- Nav Item - Master Data Mahasiswa (Aktif) -->
+            <li class="nav-item active">
+                <a class="nav-link" href="tables_mhs.html">
+                    <i class="fas fa-user-graduate fa-table"></i>
+                    <span>Master Data Mahasiswa</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block" />
+
+            <!-- Heading -->
+            <div class="sidebar-heading">TRANSAKSI</div>
+
+            <!-- Nav Item - Transaksi Penilaian -->
+            <li class="nav-item">
+                <a class="nav-link" href="transaksi.html">
+                    <i class="fas fa-calculator"></i>
+                    <span>Transaksi Penilaian</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block" />
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+            <!-- Main Content -->
+            <div id="content">
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <!-- Sidebar Toggle (Topbar Mobile) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+        
+
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small font-weight-bold">Dr. Dosen Pengampuh, M.Kom</span>
+                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg" />
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profil Saya
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Pengaturan
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Keluar (Logout)
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+                    <!-- Page Heading & Tombol Tambah Mahasiswa -->
+                    <div class="d-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800 font-weight-bold d-flex align-items-center">
+                            <i class="fas fa-user-graduate text-primary mr-2"></i> Master Data Mahasiswa
+                        </h1>
+                        <button class="btn btn-primary font-weight-bold shadow-sm px-3" data-toggle="modal"
+                            data-target="#modalTambahMhs">
+                            <i class="fas fa-plus-circle mr-1"></i> Tambah Mahasiswa Baru
+                        </button>
+                    </div>
+
+                    <!-- Card Tabel Mahasiswa -->
+                    <div class="card shadow mb-4 border-0">
+                        <div class="card-header py-3 bg-white border-bottom">
+                            <h6 class="m-0 font-weight-bold text-primary">
+                                Daftar Data Mahasiswa Terdaftar
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                                    <thead class="thead-siakad">
+                                        <tr>
+                                            <th class="text-center" style="width: 5%">No</th>
+                                            <th style="width: 11%">NIM</th>
+                                            <th style="width: 18%">Nama Mahasiswa</th>
+                                            <th style="width: 17%">Program Studi</th>
+                                            <th style="width: 8%">Angkatan</th>
+                                            <th style="width: 11%">Jenis Kelamin</th>
+                                            <th style="width: 16%">Email</th>
+                                            <th style="width: 8%">Status</th>
+                                            <th class="text-center" style="width: 90px; min-width: 90px; white-space: nowrap;">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Row 1 -->
+                                        <tr>
+                                            <td class="text-center">1</td>
+                                            <td><span class="badge-nim">230101001</span></td>
+                                            <td class="font-weight-bold text-dark">Aditya Pratama</td>
+                                            <td>Teknik Informatika</td>
+                                            <td>2023</td>
+                                            <td>Laki-laki</td>
+                                            <td>aditya@student.ac.id</td>
+                                            <td><span class="badge-status badge-aktif">Aktif</span></td>
+                                            <td class="text-center" style="white-space: nowrap">
+                                                <div class="action-container">
+                                                    <button type="button" class="btn-action-edit" title="Edit"><i class="fas fa-edit"></i></button>
+                                                    <button type="button" class="btn-action-delete" title="Hapus"><i class="fas fa-trash-alt"></i></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Row 2 -->
+                                        <tr>
+                                            <td class="text-center">2</td>
+                                            <td><span class="badge-nim">230101002</span></td>
+                                            <td class="font-weight-bold text-dark">Siti Nurhaliza</td>
+                                            <td>Teknik Informatika</td>
+                                            <td>2023</td>
+                                            <td>Perempuan</td>
+                                            <td>siti@student.ac.id</td>
+                                            <td><span class="badge-status badge-aktif">Aktif</span></td>
+                                            <td class="text-center" style="white-space: nowrap">
+                                                <div class="action-container">
+                                                    <button type="button" class="btn-action-edit" title="Edit"><i class="fas fa-edit"></i></button>
+                                                    <button type="button" class="btn-action-delete" title="Hapus"><i class="fas fa-trash-alt"></i></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Row 3 -->
+                                        <tr>
+                                            <td class="text-center">3</td>
+                                            <td><span class="badge-nim">230102001</span></td>
+                                            <td class="font-weight-bold text-dark">Bagas Rahadian</td>
+                                            <td>Sistem Informasi</td>
+                                            <td>2023</td>
+                                            <td>Laki-laki</td>
+                                            <td>bagas@student.ac.id</td>
+                                            <td><span class="badge-status badge-aktif">Aktif</span></td>
+                                            <td class="text-center" style="white-space: nowrap">
+                                                <div class="action-container">
+                                                    <button type="button" class="btn-action-edit" title="Edit"><i class="fas fa-edit"></i></button>
+                                                    <button type="button" class="btn-action-delete" title="Hapus"><i class="fas fa-trash-alt"></i></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Row 4 -->
+                                        <tr>
+                                            <td class="text-center">4</td>
+                                            <td><span class="badge-nim">230103001</span></td>
+                                            <td class="font-weight-bold text-dark">Dewi Anggraini</td>
+                                            <td>Teknologi Informasi</td>
+                                            <td>2022</td>
+                                            <td>Perempuan</td>
+                                            <td>dewi@student.ac.id</td>
+                                            <td><span class="badge-status badge-aktif">Aktif</span></td>
+                                            <td class="text-center" style="white-space: nowrap">
+                                                <div class="action-container">
+                                                    <button type="button" class="btn-action-edit" title="Edit"><i class="fas fa-edit"></i></button>
+                                                    <button type="button" class="btn-action-delete" title="Hapus"><i class="fas fa-trash-alt"></i></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Row 5 -->
+                                        <tr>
+                                            <td class="text-center">5</td>
+                                            <td><span class="badge-nim">230104001</span></td>
+                                            <td class="font-weight-bold text-dark">Fajar Ramadan</td>
+                                            <td>Sains Data</td>
+                                            <td>2023</td>
+                                            <td>Laki-laki</td>
+                                            <td>fajar@student.ac.id</td>
+                                            <td><span class="badge-status badge-aktif">Aktif</span></td>
+                                            <td class="text-center" style="white-space: nowrap">
+                                                <div class="action-container">
+                                                    <button type="button" class="btn-action-edit" title="Edit"><i class="fas fa-edit"></i></button>
+                                                    <button type="button" class="btn-action-delete" title="Hapus"><i class="fas fa-trash-alt"></i></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Row 6 -->
+                                        <tr>
+                                            <td class="text-center">6</td>
+                                            <td><span class="badge-nim">230101003</span></td>
+                                            <td class="font-weight-bold text-dark">Gita Savitri</td>
+                                            <td>Teknik Informatika</td>
+                                            <td>2023</td>
+                                            <td>Perempuan</td>
+                                            <td>gita@student.ac.id</td>
+                                            <td><span class="badge-status badge-cuti">Cuti</span></td>
+                                            <td class="text-center" style="white-space: nowrap">
+                                                <div class="action-container">
+                                                    <button type="button" class="btn-action-edit" title="Edit"><i class="fas fa-edit"></i></button>
+                                                    <button type="button" class="btn-action-delete" title="Hapus"><i class="fas fa-trash-alt"></i></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Row 7 -->
+                                        <tr>
+                                            <td class="text-center">7</td>
+                                            <td><span class="badge-nim">230102002</span></td>
+                                            <td class="font-weight-bold text-dark">Hendra Gunawan</td>
+                                            <td>Sistem Informasi</td>
+                                            <td>2022</td>
+                                            <td>Laki-laki</td>
+                                            <td>hendra@student.ac.id</td>
+                                            <td><span class="badge-status badge-aktif">Aktif</span></td>
+                                            <td class="text-center" style="white-space: nowrap">
+                                                <div class="action-container">
+                                                    <button type="button" class="btn-action-edit" title="Edit"><i class="fas fa-edit"></i></button>
+                                                    <button type="button" class="btn-action-delete" title="Hapus"><i class="fas fa-trash-alt"></i></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <!-- Row 8 -->
+                                        <tr>
+                                            <td class="text-center">8</td>
+                                            <td><span class="badge-nim">230103002</span></td>
+                                            <td class="font-weight-bold text-dark">Intan Permata</td>
+                                            <td>Teknologi Informasi</td>
+                                            <td>2023</td>
+                                            <td>Perempuan</td>
+                                            <td>intan@student.ac.id</td>
+                                            <td><span class="badge-status badge-aktif">Aktif</span></td>
+                                            <td class="text-center" style="white-space: nowrap">
+                                                <div class="action-container">
+                                                    <button type="button" class="btn-action-edit" title="Edit"><i class="fas fa-edit"></i></button>
+                                                    <button type="button" class="btn-action-delete" title="Hapus"><i class="fas fa-trash-alt"></i></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.container-fluid -->
+            </div>
+            <!-- End of Main Content -->
+
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>SIAKAD &copy; Master Data Mahasiswa 2026</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+        </div>
+        <!-- End of Content Wrapper -->
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- ================= MODAL FORM TAMBAH DATA MAHASISWA ================= -->
+    <div class="modal fade" id="modalTambahMhs" tabindex="-1" role="dialog" aria-labelledby="formTambahMhsLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header modal-header-siakad">
+                    <h5 class="modal-title font-weight-bold" id="formTambahMhsLabel">Form Data Mahasiswa</h5>
+                    <button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="formTambahMhs">
+                    <div class="modal-body p-4">
+                        <!-- Baris 1: NIM & Nama Lengkap -->
+                        <div class="form-row mb-3">
+                            <div class="form-group col-md-6">
+                                <label class="small font-weight-bold text-gray-700">NIM (Nomor Induk Mahasiswa)</label>
+                                <input type="text" class="form-control" placeholder="Contoh: 230101001" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="small font-weight-bold text-gray-700">Nama Lengkap Mahasiswa</label>
+                                <input type="text" class="form-control" placeholder="Masukkan nama lengkap" required>
+                            </div>
+                        </div>
+
+                        <!-- Baris 2: Program Studi & Angkatan -->
+                        <div class="form-row mb-3">
+                            <div class="form-group col-md-6">
+                                <label class="small font-weight-bold text-gray-700">Program Studi</label>
+                                <select class="custom-select" required>
+                                    <option value="" selected>-- Pilih Program Studi --</option>
+                                    <option value="Teknik Informatika">Teknik Informatika (S1)</option>
+                                    <option value="Sistem Informasi">Sistem Informasi (S1)</option>
+                                    <option value="Teknologi Informasi">Teknologi Informasi (D3)</option>
+                                    <option value="Sains Data">Sains Data (S1)</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="small font-weight-bold text-gray-700">Angkatan</label>
+                                <select class="custom-select" required>
+                                    <option value="2026">2026</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2023" selected>2023</option>
+                                    <option value="2022">2022</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Baris 3: Jenis Kelamin, Email Student, Status -->
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="small font-weight-bold text-gray-700">Jenis Kelamin</label>
+                                <select class="custom-select" required>
+                                    <option value="Laki-laki" selected>Laki-laki</option>
+                                    <option value="Perempuan">Perempuan</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-5">
+                                <label class="small font-weight-bold text-gray-700">Email Student</label>
+                                <input type="email" class="form-control" placeholder="email@student.ac.id" required>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="small font-weight-bold text-gray-700">Status</label>
+                                <select class="custom-select" required>
+                                    <option value="Aktif" selected>Aktif</option>
+                                    <option value="Cuti">Cuti</option>
+                                    <option value="Non-Aktif">Non-Aktif</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer bg-light">
+                        <button class="btn btn-secondary px-4 font-weight-bold" type="button" data-dismiss="modal">Batal</button>
+                        <button class="btn btn-primary px-4 font-weight-bold" type="submit">
+                            <i class="fas fa-save mr-1"></i> Simpan Data
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL FORM EDIT DATA MAHASISWA ================= -->
+    <div class="modal fade" id="modalEditMhs" tabindex="-1" role="dialog" aria-labelledby="formEditMhsLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header modal-header-siakad">
+                    <h5 class="modal-title font-weight-bold" id="formEditMhsLabel">Form Data Mahasiswa</h5>
+                    <button class="close text-white" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="formEditMhs">
+                    <div class="modal-body p-4">
+                        <!-- Baris 1: NIM & Nama Lengkap -->
+                        <div class="form-row mb-3">
+                            <div class="form-group col-md-6">
+                                <label class="small font-weight-bold text-gray-700">NIM (Nomor Induk Mahasiswa)</label>
+                                <input type="text" id="editNim" class="form-control" placeholder="Contoh: 230101001" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="small font-weight-bold text-gray-700">Nama Lengkap Mahasiswa</label>
+                                <input type="text" id="editNama" class="form-control" placeholder="Masukkan nama lengkap" required>
+                            </div>
+                        </div>
+
+                        <!-- Baris 2: Program Studi & Angkatan -->
+                        <div class="form-row mb-3">
+                            <div class="form-group col-md-6">
+                                <label class="small font-weight-bold text-gray-700">Program Studi</label>
+                                <select id="editProdi" class="custom-select" required>
+                                    <option value="" selected>-- Pilih Program Studi --</option>
+                                    <option value="Teknik Informatika">Teknik Informatika (S1)</option>
+                                    <option value="Sistem Informasi">Sistem Informasi (S1)</option>
+                                    <option value="Teknologi Informasi">Teknologi Informasi (D3)</option>
+                                    <option value="Sains Data">Sains Data (S1)</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label class="small font-weight-bold text-gray-700">Angkatan</label>
+                                <select id="editAngkatan" class="custom-select" required>
+                                    <option value="2026">2026</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2023" selected>2023</option>
+                                    <option value="2022">2022</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Baris 3: Jenis Kelamin, Email Student, Status -->
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label class="small font-weight-bold text-gray-700">Jenis Kelamin</label>
+                                <select id="editJk" class="custom-select" required>
+                                    <option value="Laki-laki" selected>Laki-laki</option>
+                                    <option value="Perempuan">Perempuan</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-5">
+                                <label class="small font-weight-bold text-gray-700">Email Student</label>
+                                <input type="email" id="editEmail" class="form-control" placeholder="email@student.ac.id" required>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label class="small font-weight-bold text-gray-700">Status</label>
+                                <select id="editStatus" class="custom-select" required>
+                                    <option value="Aktif" selected>Aktif</option>
+                                    <option value="Cuti">Cuti</option>
+                                    <option value="Non-Aktif">Non-Aktif</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer bg-light">
+                        <button class="btn btn-secondary px-4 font-weight-bold" type="button" data-dismiss="modal">Batal</button>
+                        <button class="btn btn-primary px-4 font-weight-bold" type="submit">
+                            <i class="fas fa-save mr-1"></i> Simpan Data
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Logout -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold" id="exampleModalLabel">Konfirmasi Logout</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">Apakah Anda yakin ingin keluar dari sistem SIAKAD?</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Batal</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="vendor/datatables/dataTables.bootstrap4.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="js/demo/datatables-demo.js"></script>
+
+    <!-- Script Notifikasi & Aksi Tombol -->
+    <script>
+        $(document).ready(function () {
+            // 1. TAMBAH DATA MAHASISWA
+            $("#formTambahMhs").on("submit", function (e) {
+                e.preventDefault();
+                $("#modalTambahMhs").modal("hide");
+                alert("Data Mahasiswa berhasil disimpan!");
+                this.reset();
+            });
+
+            // 2. EDIT DATA MAHASISWA (Form tampil bersih dengan placeholder & default dropdown)
+            $(".btn-action-edit").on("click", function () {
+                $("#formEditMhs")[0].reset();
+                $("#modalEditMhs").modal("show");
+            });
+
+            $("#formEditMhs").on("submit", function (e) {
+                e.preventDefault();
+                $("#modalEditMhs").modal("hide");
+                alert("Data Mahasiswa berhasil disimpan!");
+                this.reset();
+            });
+
+            // 3. HAPUS DATA MAHASISWA (Langsung alert notifikasi)
+            $(".btn-action-delete").on("click", function () {
+                alert("Data Mahasiswa berhasil dihapus!");
+            });
+        });
+    </script>
+</body>
+
+</html>
